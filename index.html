@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Crédito - Banco Popular</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            padding: 20px;
+        }
+        .simulator-box {
+            max-width: 450px;
+            margin: 30px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-top: 5px solid #004488;
+        }
+        h2 {
+            color: #004488;
+            text-align: center;
+            margin-top: 0;
+            font-size: 20px;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            font-size: 13px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #004488;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background-color: #002d5c;
+        }
+        .result-box {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e6f2ff;
+            border-left: 4px solid #004488;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .result-title {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 5px;
+        }
+        .result-value {
+            font-size: 22px;
+            font-weight: bold;
+            color: #004488;
+        }
+    </style>
+</head>
+<body>
+
+<div class="simulator-box">
+    <h2>Simulador de Libranza Prestayá</h2>
+    
+    <div class="form-group">
+        <label for="monto">Valor Solicitado ($):</label>
+        <input type="number" id="monto" value="20000000">
+    </div>
+
+    <div class="form-group">
+        <label for="plazo">Plazo (Meses):</label>
+        <input type="number" id="plazo" value="36">
+    </div>
+
+    <div class="form-group">
+        <label for="tasaAnual">Tasa Nominal Anual (%):</label>
+        <input type="number" id="tasaAnual" value="12" step="0.1">
+    </div>
+
+    <button onclick="calcularCuota()">Calcular Nueva Cuota</button>
+
+    <div class="result-box">
+        <div class="result-title">Cuota Mensual Proyectada:</div>
+        <div class="result-value" id="cuotaResultado">$567.975</div>
+    </div>
+</div>
+
+<script>
+function calcularCuota() {
+    const monto = parseFloat(document.getElementById('monto').value);
+    const plazo = parseInt(document.getElementById('plazo').value);
+    const tasaAnual = parseFloat(document.getElementById('tasaAnual').value);
+
+    if (isNaN(monto) || isNaN(plazo) || isNaN(tasaAnual) || monto <= 0 || plazo <= 0 || tasaAnual <= 0) {
+        alert("Por favor, ingresa valores válidos en todos los campos.");
+        return;
+    }
+
+    const tasaMensual = (tasaAnual / 12) / 100;
+    const cuota = (monto * tasaMensual) / (1 - Math.pow(1 + tasaMensual, -plazo));
+
+    const formateador = new Intl.NumberFormat('es-CO', {
+        style: 'currency',
+        currency: 'COP',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+    });
+
+    document.getElementById('cuotaResultado').innerText = formateador.format(cuota);
+}
+
+window.onload = calcularCuota;
+</script>
+
+</body>
+</html>
